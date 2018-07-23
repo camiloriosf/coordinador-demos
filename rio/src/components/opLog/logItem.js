@@ -12,6 +12,21 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Popper from "@material-ui/core/Popper";
+import Fade from "@material-ui/core/Fade";
+import Paper from "@material-ui/core/Paper";
+import Menu from "@material-ui/core/Menu";
+import MenuList from "@material-ui/core/MenuList";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import Switch from "@material-ui/core/Switch";
 import green from "@material-ui/core/colors/green";
 import orange from "@material-ui/core/colors/orange";
 import grey from "@material-ui/core/colors/grey";
@@ -23,6 +38,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/Save";
 import DescriptionIcon from "@material-ui/icons/Comment";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import SearchIcon from "@material-ui/icons/Search";
+import DraftsIcon from "@material-ui/icons/Drafts";
+import SendIcon from "@material-ui/icons/Send";
 import NumPad from "./numPad";
 
 const styles = theme => ({
@@ -90,6 +109,15 @@ const styles = theme => ({
   },
   yellowIcon: {
     color: yellow[700]
+  },
+  filter: {
+    display: "flex",
+    alignItems: "center"
+  },
+  filterPopup: {
+    display: "flex",
+    alignItems: "center",
+    padding: 10
   }
 });
 
@@ -98,7 +126,9 @@ class LogItem extends React.Component {
     requiredGx: this.props.instructedGx,
     glow: true,
     numPad: false,
-    comments: false
+    comments: false,
+    anchorEl: null,
+    open: false
   };
   componentDidMount = () => {
     const { co } = this.props;
@@ -146,6 +176,24 @@ class LogItem extends React.Component {
   handleCloseComments = () => {
     this.setState({ comments: false });
   };
+  handleOpenFilter = event => {
+    const { currentTarget } = event;
+    this.setState({
+      anchorEl: currentTarget,
+      open: true
+    });
+  };
+
+  handleCloseFilter = () => {
+    this.setState({
+      open: false
+    });
+  };
+
+  // handleClose = () => {
+  //   this.setState({ anchorEl: null });
+  // };
+
   renderState = () => {
     const { outOfService, unavailable } = this.props;
     if (outOfService || unavailable) {
@@ -170,8 +218,8 @@ class LogItem extends React.Component {
       edit
     } = this.props;
 
-    const { requiredGx, glow, numPad, comments } = this.state;
-
+    const { requiredGx, glow, numPad, comments, anchorEl, open } = this.state;
+    const id = open ? "simple-popper" : null;
     return (
       <div
         className={classnames(
@@ -203,21 +251,46 @@ class LogItem extends React.Component {
             <Avatar
               className={classnames(
                 classes.avatar,
-                outOfService && classes.orange,
+                outOfService && classes.grey,
                 unavailable && classes.red
               )}
             >
               {this.renderState()}
             </Avatar>
           ) : (
-            <Typography variant="body2" noWrap>
-              Estado
-            </Typography>
+            <div className={classes.filter}>
+              <Typography variant="body2" noWrap>
+                Estado
+              </Typography>
+              <IconButton
+                className={classes.button}
+                aria-label="Filter"
+                onClick={this.handleOpenFilter}
+              >
+                <FilterListIcon />
+              </IconButton>
+            </div>
           )}
         </div>
-        <Typography variant="body2" noWrap className={classes.config}>
+        <div className={classes.config}>
+          {!header ? (
+            <Typography variant="body2" noWrap>
+              {title}
+            </Typography>
+          ) : (
+            <div className={classes.filter}>
+              <Typography variant="body2" noWrap>
+                Configuración
+              </Typography>
+              <IconButton className={classes.button} aria-label="Search">
+                <SearchIcon />
+              </IconButton>
+            </div>
+          )}
+        </div>
+        {/* <Typography variant="body2" noWrap className={classes.config}>
           {!header ? title : "Configuración"}
-        </Typography>
+        </Typography> */}
         {/* <div className={classes.limitation}>
           {!header && limitation && <WarningIcon className={classes.icon} />}
           {header && (
@@ -356,6 +429,61 @@ class LogItem extends React.Component {
               </Button>
             </DialogActions>
           </Dialog>
+          <Popper
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            transition
+            placement="bottom-start"
+            style={{ zIndex: 9999, marginLeft: -53, marginTop: -58 }}
+          >
+            {({ TransitionProps }) => (
+              <Fade {...TransitionProps} timeout={350}>
+                <Paper square elevation={4} style={{ borderTop: "none" }}>
+                  <div className={classes.filterPopup}>
+                    <Typography
+                      variant="body2"
+                      noWrap
+                      // style={{ marginLeft: 20, paddingTop: 10 }}
+                    >
+                      Estado
+                    </Typography>
+                    <IconButton
+                      className={classes.button}
+                      aria-label="Filter"
+                      onClick={this.handleCloseFilter}
+                    >
+                      <FilterListIcon />
+                    </IconButton>
+                  </div>
+                  <MenuItem className={classes.menuItem}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked value="checkedB" color="primary" />
+                      }
+                      label="E/S"
+                    />
+                  </MenuItem>
+                  <MenuItem className={classes.menuItem}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked value="checkedB" color="primary" />
+                      }
+                      label="F/S"
+                    />
+                  </MenuItem>
+                  <MenuItem className={classes.menuItem}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked value="checkedB" color="primary" />
+                      }
+                      label="Indisponible"
+                    />
+                  </MenuItem>
+                </Paper>
+              </Fade>
+            )}
+          </Popper>
         </div>
       </div>
     );

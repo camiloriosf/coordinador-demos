@@ -12,7 +12,7 @@ const styles = theme => ({
     position: "fixed",
     bottom: 0,
     left: 0,
-    zIndex: 9999,
+    zIndex: 900,
     margin: theme.spacing.unit * 3
   },
   paper: {

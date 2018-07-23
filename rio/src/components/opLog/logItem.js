@@ -7,17 +7,22 @@ import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import green from "@material-ui/core/colors/green";
 import orange from "@material-ui/core/colors/orange";
 import grey from "@material-ui/core/colors/grey";
 import red from "@material-ui/core/colors/red";
 import blue from "@material-ui/core/colors/blue";
-// import WarningIcon from "@material-ui/icons/Warning";
+import yellow from "@material-ui/core/colors/yellow";
 import LogItemOptions from "./logItemOptions";
 import EditIcon from "@material-ui/icons/Edit";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/Save";
-// import NumPad from "react-numpad-material";
+import DescriptionIcon from "@material-ui/icons/Comment";
 import NumPad from "./numPad";
 
 const styles = theme => ({
@@ -82,13 +87,18 @@ const styles = theme => ({
   },
   noGlow: {
     boxShadow: "none"
+  },
+  yellowIcon: {
+    color: yellow[700]
   }
 });
 
 class LogItem extends React.Component {
   state = {
     requiredGx: this.props.instructedGx,
-    glow: true
+    glow: true,
+    numPad: false,
+    comments: false
   };
   componentDidMount = () => {
     const { co } = this.props;
@@ -121,6 +131,21 @@ class LogItem extends React.Component {
   handleChange = value => {
     this.setState({ requiredGx: value });
   };
+  handleCloseNumPad = () => {
+    this.setState({ numPad: false });
+  };
+  handleOpenNumPad = () => {
+    this.setState({ numPad: true });
+  };
+  handleNumPadSubmit = ({ value }) => () => {
+    this.setState({ numPad: false, requiredGx: value });
+  };
+  handleOpenComments = () => {
+    this.setState({ comments: true });
+  };
+  handleCloseComments = () => {
+    this.setState({ comments: false });
+  };
   renderState = () => {
     const { outOfService, unavailable } = this.props;
     if (outOfService || unavailable) {
@@ -145,7 +170,7 @@ class LogItem extends React.Component {
       edit
     } = this.props;
 
-    const { requiredGx, glow } = this.state;
+    const { requiredGx, glow, numPad, comments } = this.state;
 
     return (
       <div
@@ -203,30 +228,43 @@ class LogItem extends React.Component {
         </div> */}
         <div className={classes.number}>
           <Typography variant="body2" noWrap>
+            {!header ? (
+              <IconButton
+                className={classes.button}
+                aria-label="Notes"
+                onClick={this.handleOpenComments}
+              >
+                <DescriptionIcon className={classes.yellowIcon} />
+              </IconButton>
+            ) : (
+              "Comentarios"
+            )}
+          </Typography>
+        </div>
+        <div className={classes.number}>
+          <Typography variant="body2" noWrap>
             {!header ? cv : "CV"}
           </Typography>
         </div>
         <div className={classes.number}>
           {edit ? (
-            // <NumPad.Popover
-            //   onChange={this.handleChange}
-            //   position="centerRight"
-            //   arrow="left"
-            //   qtyIncrement={0.1}
-            //   isDecimal
-            //   decimalSeparator="."
-            //   value={requiredGx}
-            // >
-            //   <TextField
-            //     id="instructedGx"
-            //     label="instructedGx"
-            //     className={classes.textField}
-            //     value={requiredGx}
-            //     inputProps={{ step: 0.1 }}
-            //     margin="normal"
-            //   />
-            // </NumPad.Popover>
-            <div />
+            <div>
+              <TextField
+                id="instructedGx"
+                label="instructedGx"
+                className={classes.textField}
+                value={requiredGx}
+                inputProps={{ step: 0.1 }}
+                onClick={this.handleOpenNumPad}
+                margin="normal"
+              />
+              <NumPad
+                open={numPad}
+                value={requiredGx}
+                handleClose={this.handleCloseNumPad}
+                handleSubmit={this.handleNumPadSubmit}
+              />
+            </div>
           ) : (
             <Typography variant="body2" noWrap>
               {!header ? instructedGx : "Gx Instruida"}
@@ -277,6 +315,47 @@ class LogItem extends React.Component {
                 <SaveIcon />
               </Button>
             )}
+          {!edit &&
+            !header && (
+              <Typography variant="body2" noWrap>
+                12:00:00
+              </Typography>
+            )}
+          {!edit &&
+            header && (
+              <Typography variant="body2" noWrap>
+                {"Última instrucción"}
+              </Typography>
+            )}
+        </div>
+        <div>
+          <Dialog open={comments} onClose={this.handleCloseComments}>
+            <DialogTitle>{"Comentarios"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur scelerisque nisi a elementum vulputate. Ut tincidunt
+                molestie urna, vel accumsan nisl accumsan vitae. Fusce fermentum
+                felis metus, in molestie leo tristique nec. Morbi euismod sapien
+                sem, et commodo ante pellentesque vitae. Nunc vestibulum ligula
+                in feugiat varius. Donec imperdiet dolor ac nibh vestibulum
+                feugiat sit amet sit amet ante. Pellentesque quis vulputate
+                lorem, a facilisis urna. Nullam elementum mattis erat, ac
+                pretium diam vulputate eu. Integer vitae lobortis ligula, non
+                commodo odio. Nulla finibus ipsum a nisl vestibulum vulputate.
+                Donec quis ultrices ex.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={this.handleCloseComments}
+                color="primary"
+                autoFocus
+              >
+                Aceptar
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </div>
     );

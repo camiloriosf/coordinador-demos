@@ -4,14 +4,12 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Dialog from "@material-ui/core/Dialog";
 import ButtonBase from "@material-ui/core/ButtonBase";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import grey from "@material-ui/core/colors/grey";
 import BackspaceIcon from "@material-ui/icons/Backspace";
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing.unit,
     width: 300,
     margin: 0
   },
@@ -28,7 +26,7 @@ const styles = theme => ({
 
 class NumPad extends React.Component {
   state = {
-    value: 0
+    value: this.props.value
   };
   handleAdd = () => {
     this.setState(prev => ({ value: (prev.value * 10 + 1) / 10 }));
@@ -60,10 +58,10 @@ class NumPad extends React.Component {
     this.setState({ value });
   };
   render() {
-    const { classes } = this.props;
+    const { classes, open, handleClose, handleSubmit } = this.props;
     const { value } = this.state;
     return (
-      <Dialog open>
+      <Dialog open={open} onClose={handleClose}>
         <Grid container spacing={0} justify="center" className={classes.root}>
           <Grid item xs={3}>
             <ButtonBase
@@ -145,14 +143,22 @@ class NumPad extends React.Component {
             </ButtonBase>
           </Grid>
           <Grid item xs={6} className={classes.item}>
-            <ButtonBase focusRipple className={classes.button}>
+            <ButtonBase
+              focusRipple
+              className={classes.button}
+              onClick={handleClose}
+            >
               <Typography variant="button" gutterBottom>
                 Cancelar
               </Typography>
             </ButtonBase>
           </Grid>
           <Grid item xs={6} className={classes.item}>
-            <ButtonBase focusRipple className={classes.button}>
+            <ButtonBase
+              focusRipple
+              className={classes.button}
+              onClick={handleSubmit({ value: Number(value) })}
+            >
               <Typography variant="button" color="primary" gutterBottom>
                 Aceptar
               </Typography>
@@ -165,7 +171,15 @@ class NumPad extends React.Component {
 }
 
 NumPad.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  open: PropTypes.bool,
+  value: PropTypes.number.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired
+};
+
+NumPad.defaultProps = {
+  open: false
 };
 
 export default withStyles(styles)(NumPad);

@@ -142,7 +142,7 @@ export const sendEmail = async (event, context, callback) => {
   try {
     const { email = "", id = "" } = event;
     sgMail.setApiKey(
-      "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"
+      ""
     );
     const msg = {
       to: email,

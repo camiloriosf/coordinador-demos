@@ -6,7 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import logo from "../../static/logoCoordinador.svg";
-import LogItem from "../opLog/logItem";
+import LogSubHeader from "./logSubHeader";
 
 const styles = theme => ({
   root: {
@@ -43,7 +43,7 @@ class Header extends React.Component {
             <Button color="secondary">Cerrar Sesión</Button>
           </Toolbar>
           <div className={classes.log}>
-            <LogItem header />
+            <LogSubHeader />
           </div>
         </AppBar>
       </div>

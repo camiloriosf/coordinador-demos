@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+// import axios from "axios";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import withRoot from "../HoC/withRoot";
@@ -26,6 +27,19 @@ class OpLog extends React.Component {
     onService: true,
     outOfService: false,
     unavailable: false
+  };
+  componentDidMount = async () => {
+    // try {
+    //   const res = await axios.post(
+    //     "http://localhost:4000",
+    //     {},
+    //     {
+    //       withCredentials: "include"
+    //       // headers: { "Access-Control-Allow-Origin": "*" }
+    //     }
+    //   );
+    //   console.log(res);
+    // } catch (err) {}
   };
 
   handleToCBClick = () => {

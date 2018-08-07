@@ -6,7 +6,9 @@ import { withStyles } from "@material-ui/core/styles";
 import withRoot from "../HoC/withRoot";
 import withHeader from "../HoC/withHeader";
 import LogItem from "../components/opLog/logItem";
-import Filter from "../components/opLog/filters";
+// import Filter from "../components/opLog/filters";
+import Zone from "../components/opLog/zone";
+import AddZone from "../components/opLog/addZone";
 import ToCB from "../components/opLog/toCB";
 
 const styles = theme => ({
@@ -26,7 +28,8 @@ class OpLog extends React.Component {
   state = {
     onService: true,
     outOfService: false,
-    unavailable: false
+    unavailable: false,
+    openAddZone: false
   };
   componentDidMount = async () => {
     // try {
@@ -50,7 +53,16 @@ class OpLog extends React.Component {
     this.setState({ onService, outOfService });
   };
 
+  handleAddZone = () => {
+    this.setState({ openAddZone: true });
+  };
+
+  handleAddZoneClose = () => {
+    this.setState({ openAddZone: false });
+  };
+
   render() {
+    const { openAddZone } = this.state;
     const { classes, log, match } = this.props;
     const { params = {} } = match;
     const { options = null } = params;
@@ -75,13 +87,18 @@ class OpLog extends React.Component {
         <div className={classes.header}>
           {!options && (
             <div>
-              <Filter
+              {/* <Filter
                 handleFilterUpdate={this.handleFilterUpdate}
                 onService={this.state.onService}
                 outOfService={this.state.outOfService}
                 unavailable={this.state.unavailable}
-              />
+              /> */}
+              <Zone handleClick={this.handleAddZone} />
               <ToCB handleToCBClick={this.handleToCBClick} />
+              <AddZone
+                open={openAddZone}
+                handleClose={this.handleAddZoneClose}
+              />
             </div>
           )}
         </div>

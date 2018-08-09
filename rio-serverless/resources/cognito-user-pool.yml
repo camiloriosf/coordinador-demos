@@ -6,8 +6,6 @@ Resources:
       UserPoolName: ${self:custom.stage}-rio-user-pool
       # Set email, phone_number, and preferred_username as aliases
       AliasAttributes:
-        - email
-        - phone_number
         - preferred_username
       AutoVerifiedAttributes:
         - email

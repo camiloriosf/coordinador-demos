@@ -103,7 +103,7 @@ class OpLog extends React.Component {
           )}
         </div>
         <div className={classes.log}>
-          {filtered.map(item => (
+          {filtered.map((item, index) => (
             <div
               key={item.id}
               ref={node => {
@@ -123,6 +123,7 @@ class OpLog extends React.Component {
                 instructedGx={item.instructedGx}
                 realGx={item.realGx}
                 edit={item.edit}
+                index={index}
               />
             </div>
           ))}

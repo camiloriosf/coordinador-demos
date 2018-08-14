@@ -13,6 +13,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
+import Menu from "@material-ui/core/Menu";
 import Collapse from "@material-ui/core/Collapse";
 import green from "@material-ui/core/colors/green";
 import grey from "@material-ui/core/colors/grey";
@@ -25,13 +26,32 @@ import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/Save";
 import DescriptionIcon from "@material-ui/icons/Comment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import SwipeableViews from "react-swipeable-views";
+import Popper from "@material-ui/core/Popper";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Grow from "@material-ui/core/Grow";
 import NumPad from "./numPad";
+
+function TabContainer({ children, dir }) {
+  return (
+    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
+      {children}
+    </Typography>
+  );
+}
 
 const styles = theme => ({
   root: {
     margin: theme.spacing.unit,
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: 0,
+    marginBottom: 0,
+    borderTop: "solid 1px ",
+    borderTopColor: grey[500]
+  },
+  noBorder: {
+    borderTop: "none"
   },
   edit: {
     width: 80
@@ -93,20 +113,52 @@ const styles = theme => ({
     display: "flex",
     flexWrap: "wrap"
   },
+  editConfigDetails: {
+    marginTop: 0,
+    backgroundColor: blue[50]
+  },
   configDetail: {
     margin: theme.spacing.unit,
     padding: theme.spacing.unit,
-    minWidth: 150,
+    width: 200,
+    minWidth: 200,
+    minHeight: 120,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center"
+    justifyContent: "space-between"
   },
   configTitle: {
-    textAlign: "center"
+    textAlign: "center",
+    marginTop: theme.spacing.unit,
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap"
   },
   configSubTitle: {
     textAlign: "center",
     marginTop: theme.spacing.unit
+  },
+  link: {
+    color: theme.palette.primary.main,
+    marginRight: theme.spacing.unit,
+    textDecoration: "inherit",
+    "&:hover": {
+      textDecoration: "underline"
+    }
+  },
+  instructionPaper: {
+    width: 450,
+    height: 400,
+    marginTop: -15
+  },
+  instructionOptions: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  instructionButton: {
+    margin: 10
   }
 });
 
@@ -116,7 +168,10 @@ class LogItem extends React.Component {
     glow: true,
     numPad: false,
     comments: false,
-    expandConfig: false
+    expandConfig: false,
+    anchorEl: null,
+    value: 0,
+    open: false
   };
   componentDidMount = () => {
     const { co } = this.props;
@@ -166,6 +221,18 @@ class LogItem extends React.Component {
     this.setState(prev => ({ expandConfig: !prev.expandConfig }));
   };
 
+  handleSaveInstruction = () => {
+    // this.setState({ open: true });
+  };
+
+  handleClick = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = event => {
+    this.setState({ open: false });
+  };
+
   renderState = () => {
     const { outOfService, unavailable } = this.props;
     if (outOfService || unavailable) {
@@ -186,10 +253,19 @@ class LogItem extends React.Component {
       outOfService,
       unavailable,
       limitation,
-      edit
+      edit,
+      index
     } = this.props;
 
-    const { requiredGx, glow, numPad, comments, expandConfig } = this.state;
+    const {
+      requiredGx,
+      glow,
+      numPad,
+      comments,
+      expandConfig,
+      anchorEl,
+      open
+    } = this.state;
 
     return (
       <div>
@@ -198,7 +274,8 @@ class LogItem extends React.Component {
             classes.root,
             co === "CB" && classes.glow,
             co === "CB" && !glow && classes.noGlow,
-            edit && classes.editBox
+            edit && classes.editBox,
+            index === 0 && classes.noBorder
           )}
         >
           <div className={classes.edit}>
@@ -263,7 +340,8 @@ class LogItem extends React.Component {
               <div>
                 <TextField
                   id="instructedGx"
-                  label="instructedGx"
+                  autoFocus
+                  // label="Gx instruida"
                   className={classes.textField}
                   value={requiredGx}
                   inputProps={{ step: 0.1 }}
@@ -288,23 +366,44 @@ class LogItem extends React.Component {
               {realGx}
             </Typography>
           </div>
-          <div className={classes.options}>
+          <div
+            className={classes.options}
+            ref={node => {
+              this.anchorEl = node;
+            }}
+          >
             <LogItemOptions
               ins={eo}
               type="EO"
               limitation={limitation}
               edit={edit}
+              handleClick={this.handleClick}
             />
           </div>
           <div className={classes.options}>
-            <LogItemOptions ins={co} type="CO" edit={edit} />
+            <LogItemOptions
+              ins={co}
+              type="CO"
+              edit={edit}
+              handleClick={this.handleClick}
+            />
           </div>
           <div className={classes.options}>
-            <LogItemOptions ins={io} type="IO" edit={edit} />
+            <LogItemOptions
+              ins={io}
+              type="IO"
+              edit={edit}
+              handleClick={this.handleClick}
+            />
           </div>
           <div className={classes.options}>
             {edit ? (
-              <Button variant="fab" color="primary" aria-label="save">
+              <Button
+                variant="fab"
+                color="primary"
+                aria-label="save"
+                onClick={this.handleSaveInstruction}
+              >
                 <SaveIcon />
               </Button>
             ) : (
@@ -345,7 +444,12 @@ class LogItem extends React.Component {
         </div>
         <div>
           <Collapse in={expandConfig}>
-            <div className={classes.configDetails}>
+            <div
+              className={classnames(
+                classes.configDetails,
+                edit && classes.editConfigDetails
+              )}
+            >
               <Paper elevation={4} className={classes.configDetail}>
                 <Typography
                   variant="display2"
@@ -394,8 +498,150 @@ class LogItem extends React.Component {
                   Costo Partida
                 </Typography>
               </Paper>
+              <Paper elevation={4} className={classes.configDetail}>
+                <Typography
+                  variant="subheading"
+                  noWrap
+                  className={classes.configTitle}
+                >
+                  <a className={classes.link} href="#" target="_blank">
+                    0102
+                  </a>
+                  <a className={classes.link} href="#" target="_blank">
+                    0234
+                  </a>
+                  <a className={classes.link} href="#" target="_blank">
+                    1445
+                  </a>
+                  <a className={classes.link} href="#" target="_blank">
+                    0102
+                  </a>
+                  <a className={classes.link} href="#" target="_blank">
+                    0234
+                  </a>
+                  <a className={classes.link} href="#" target="_blank">
+                    1445
+                  </a>
+                </Typography>
+                <Typography
+                  variant="body2"
+                  noWrap
+                  className={classes.configSubTitle}
+                >
+                  Neomante
+                </Typography>
+              </Paper>
+              <Paper elevation={4} className={classes.configDetail}>
+                <Typography
+                  variant="subheading"
+                  noWrap
+                  className={classes.configTitle}
+                >
+                  Crucero 220
+                </Typography>
+                <Typography
+                  variant="body2"
+                  noWrap
+                  className={classes.configSubTitle}
+                >
+                  Conexión
+                </Typography>
+              </Paper>
+              <Paper elevation={4} className={classes.configDetail}>
+                <Typography
+                  variant="subheading"
+                  noWrap
+                  className={classes.configTitle}
+                >
+                  EnorChile
+                </Typography>
+                <Typography
+                  variant="body2"
+                  noWrap
+                  className={classes.configSubTitle}
+                >
+                  Centro de Control
+                </Typography>
+              </Paper>
             </div>
           </Collapse>
+          {/* <Menu
+            id="simple-menu"
+            anchorEl={this.anchorEl}
+            // open={Boolean(anchorEl)}
+            open={edit && Boolean(this.anchorEl)}
+            // onClose={this.handleClose}
+          >
+            <SwipeableViews
+              axis="x"
+              index={this.state.value}
+              onChangeIndex={this.handleChangeIndex}
+            >
+              <TabContainer>Item One</TabContainer>
+              <TabContainer>Item Two</TabContainer>
+              <TabContainer>Item Three</TabContainer>
+            </SwipeableViews>
+          </Menu> */}
+          <Popper
+            open={open}
+            anchorEl={this.anchorEl}
+            transition
+            disablePortal
+            placement="bottom-start"
+            style={{ zIndex: 9999 }}
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                id="menu-list-grow"
+                style={{
+                  transformOrigin:
+                    placement === "bottom" ? "center top" : "center bottom"
+                }}
+              >
+                <Paper className={classes.instructionPaper}>
+                  <ClickAwayListener onClickAway={this.handleClose}>
+                    <SwipeableViews
+                      axis="x"
+                      index={this.state.value}
+                      onChangeIndex={this.handleChangeIndex}
+                    >
+                      <TabContainer>
+                        <div className={classes.instructionOptions}>
+                          <Button
+                            variant="contained"
+                            className={classes.instructionButton}
+                          >
+                            N - Normal
+                          </Button>
+                          <Button
+                            variant="contained"
+                            className={classes.instructionButton}
+                          >
+                            LP - Normal
+                          </Button>
+                          <Button
+                            variant="contained"
+                            className={classes.instructionButton}
+                          >
+                            N - Normal
+                          </Button>
+                          <Button
+                            variant="contained"
+                            className={classes.instructionButton}
+                          >
+                            LP - Normal
+                          </Button>
+                        </div>
+                      </TabContainer>
+                      <TabContainer>Item Two</TabContainer>
+                      <TabContainer>Item Three</TabContainer>
+                    </SwipeableViews>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </div>
       </div>
     );
@@ -415,7 +661,8 @@ LogItem.propTypes = {
   unavailable: PropTypes.bool,
   limitation: PropTypes.bool,
   lim: PropTypes.string,
-  edit: PropTypes.bool
+  edit: PropTypes.bool,
+  index: PropTypes.number.isRequired
 };
 
 LogItem.defaultProps = {

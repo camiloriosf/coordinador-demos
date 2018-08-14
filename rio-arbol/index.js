@@ -28,7 +28,7 @@ const lineas = {
   J: true,
   K: false,
   L: true,
-  M: false
+  M: true
 };
 
 let s1 = [];

@@ -6,6 +6,19 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import green from "@material-ui/core/colors/green";
 import grey from "@material-ui/core/colors/grey";
 import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import SwipeableViews from "react-swipeable-views";
+
+function TabContainer({ children, dir }) {
+  return (
+    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
+      {children}
+    </Typography>
+  );
+}
 
 const styles = theme => ({
   root: {
@@ -105,7 +118,8 @@ const optionsIO = [
 class LogItemOptions extends React.Component {
   state = {
     show: false,
-    anchorEl: null
+    anchorEl: null,
+    value: 0
   };
 
   handleClick = event => {
@@ -118,6 +132,14 @@ class LogItemOptions extends React.Component {
 
   handleOptionClick = item => () => {};
 
+  handleChange = (event, value) => {
+    this.setState({ value });
+  };
+
+  handleChangeIndex = index => {
+    this.setState({ value: index });
+  };
+
   renderList = () => {
     if (this.props.type === "EO") return optionsEO;
     if (this.props.type === "CO") return optionsCO;
@@ -125,12 +147,12 @@ class LogItemOptions extends React.Component {
     return [];
   };
   render() {
-    const { classes, ins, type, limitation, edit } = this.props;
+    const { classes, ins, type, limitation, edit, handleClick } = this.props;
     const { anchorEl } = this.state;
     return (
       <div className={classes.root}>
         <ButtonBase
-          onClick={this.handleClick}
+          onClick={handleClick}
           disabled={!edit}
           classes={{
             root: classnames(
@@ -143,26 +165,22 @@ class LogItemOptions extends React.Component {
         >
           {ins}
         </ButtonBase>
-        <Menu
+        {/* <Menu
           id="simple-menu"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
         >
-          {this.renderList().map(item => (
-            <ButtonBase
-              key={item}
-              disabled={item === ins}
-              classes={{
-                root: classnames(classes.button, classes.grey),
-                disabled: classes.disabled
-              }}
-              onClick={this.handleClose}
-            >
-              {item}
-            </ButtonBase>
-          ))}
-        </Menu>
+          <SwipeableViews
+            axis="x"
+            index={this.state.value}
+            onChangeIndex={this.handleChangeIndex}
+          >
+            <TabContainer>Item One</TabContainer>
+            <TabContainer>Item Two</TabContainer>
+            <TabContainer>Item Three</TabContainer>
+          </SwipeableViews>
+        </Menu> */}
       </div>
     );
   }
@@ -173,12 +191,16 @@ LogItemOptions.propTypes = {
   ins: PropTypes.string.isRequired,
   type: PropTypes.oneOf(["EO", "CO", "IO"]).isRequired,
   limitation: PropTypes.bool,
-  edit: PropTypes.bool
+  edit: PropTypes.bool,
+  handleClick: PropTypes.func
 };
 
 LogItemOptions.defaultProps = {
   limitation: false,
-  edit: false
+  edit: false,
+  handleClick: () => {
+    return;
+  }
 };
 
 export default withStyles(styles)(LogItemOptions);

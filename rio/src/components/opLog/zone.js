@@ -9,6 +9,7 @@ import AddIcon from "@material-ui/icons/Add";
 import PhoneIcon from "@material-ui/icons/Phone";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PersonPinIcon from "@material-ui/icons/PersonPin";
+import TabUnselected from "@material-ui/icons/TabUnselected";
 import grey from "@material-ui/core/colors/grey";
 
 const styles = theme => ({
@@ -67,7 +68,7 @@ class Zone extends React.Component {
             textColor="secondary"
           >
             <Tab
-              icon={<PersonPinIcon />}
+              icon={<TabUnselected />}
               label="Zona 1"
               style={{
                 borderRightStyle: "solid",
@@ -76,7 +77,7 @@ class Zone extends React.Component {
               }}
             />
             <Tab
-              icon={<PersonPinIcon />}
+              icon={<TabUnselected />}
               label="Zona 2"
               style={{
                 borderRightStyle: "solid",
@@ -84,7 +85,7 @@ class Zone extends React.Component {
                 borderRightWidth: 2
               }}
             />
-            <Tab icon={<PersonPinIcon />} label="Zona 3" />
+            <Tab icon={<TabUnselected />} label="Zona 3" />
           </Tabs>
         </Paper>
       </div>

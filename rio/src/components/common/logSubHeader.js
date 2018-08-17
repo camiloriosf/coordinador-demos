@@ -12,6 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ClearIcon from "@material-ui/icons/Clear";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
@@ -41,7 +42,8 @@ const styles = theme => ({
   options: {
     width: 150,
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    textAlign: "center"
   },
   filter: {
     display: "flex",
@@ -60,21 +62,28 @@ const styles = theme => ({
 
 class LogSubHeader extends React.Component {
   state = {
+    openConfigSearch: false,
     statusEl: null,
-    openStatusFilter: false,
-    openConfigSearch: false
+    statusFilter: false,
+    opStateEl: null,
+    opStateFilter: false,
+    sloganEl: null,
+    sloganFilter: false,
+    instructionEl: null,
+    instructionFilter: false
   };
-  handleOpenFilter = event => {
+
+  handleOpenFilter = name => event => {
     const { currentTarget } = event;
     this.setState({
-      statusEl: currentTarget,
-      openStatusFilter: true
+      [`${name}El`]: currentTarget,
+      [`${name}Filter`]: true
     });
   };
 
-  handleCloseFilter = () => {
+  handleCloseFilter = name => () => {
     this.setState({
-      openStatusFilter: false
+      [`${name}Filter`]: false
     });
   };
 
@@ -97,8 +106,23 @@ class LogSubHeader extends React.Component {
   render() {
     const { classes } = this.props;
 
-    const { statusEl, openStatusFilter, openConfigSearch } = this.state;
-    const id = openStatusFilter ? "status-filter-popper" : null;
+    const {
+      openConfigSearch,
+      statusEl,
+      statusFilter,
+      opStateEl,
+      opStateFilter,
+      sloganEl,
+      sloganFilter,
+      instructionEl,
+      instructionFilter
+    } = this.state;
+    const id = statusFilter ? "status-filter-popper" : null;
+    const idOpState = opStateFilter ? "op-state-filter-popper" : null;
+    const idSlogan = sloganFilter ? "slogan-filter-popper" : null;
+    const idInstruction = instructionFilter
+      ? "instruction-filter-popper"
+      : null;
     return (
       <div className={classes.root}>
         <div className={classes.edit}>
@@ -113,7 +137,7 @@ class LogSubHeader extends React.Component {
           <IconButton
             className={classes.button}
             aria-label="Filter"
-            onClick={this.handleOpenFilter}
+            onClick={this.handleOpenFilter("status")}
           >
             <FilterListIcon />
           </IconButton>
@@ -180,20 +204,35 @@ class LogSubHeader extends React.Component {
             Gx Real
           </Typography>
         </div>
-        <div className={classes.options}>
-          <Typography variant="body2" noWrap>
-            Estado Operacional
-          </Typography>
+        <div className={classnames(classes.options, classes.filter)}>
+          <Typography variant="body2">Estado Operacional</Typography>
+          <IconButton
+            className={classes.button}
+            aria-label="Filter"
+            onClick={this.handleOpenFilter("opState")}
+          >
+            <FilterListIcon />
+          </IconButton>
         </div>
-        <div className={classes.options}>
-          <Typography variant="body2" noWrap>
-            Consigna
-          </Typography>
+        <div className={classnames(classes.options, classes.filter)}>
+          <Typography variant="body2">Consigna</Typography>
+          <IconButton
+            className={classes.button}
+            aria-label="Filter"
+            onClick={this.handleOpenFilter("slogan")}
+          >
+            <FilterListIcon />
+          </IconButton>
         </div>
-        <div className={classes.options}>
-          <Typography variant="body2" noWrap>
-            Instrucción Operacional
-          </Typography>
+        <div className={classnames(classes.options, classes.filter)}>
+          <Typography variant="body2">Instrucción Operacional</Typography>
+          <IconButton
+            className={classes.button}
+            aria-label="Filter"
+            onClick={this.handleOpenFilter("instruction")}
+          >
+            <FilterListIcon />
+          </IconButton>
         </div>
         <div className={classes.options}>
           <Typography variant="body2" noWrap>
@@ -203,52 +242,225 @@ class LogSubHeader extends React.Component {
         <div>
           <Popper
             id={id}
-            open={openStatusFilter}
+            open={statusFilter}
             anchorEl={statusEl}
             transition
             placement="bottom-start"
             style={{ zIndex: 9999, marginLeft: -53, marginTop: -58 }}
           >
             {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={350}>
-                <Paper square elevation={4}>
-                  <div className={classes.filterPopup}>
-                    <Typography variant="body2" noWrap>
-                      Estado
-                    </Typography>
-                    <IconButton
-                      className={classes.button}
-                      aria-label="Filter"
-                      onClick={this.handleCloseFilter}
-                    >
-                      <FilterListIcon />
-                    </IconButton>
-                  </div>
-                  <MenuItem className={classes.menuItem}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked value="checkedB" color="primary" />
-                      }
-                      label="E/S"
-                    />
-                  </MenuItem>
-                  <MenuItem className={classes.menuItem}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked value="checkedB" color="primary" />
-                      }
-                      label="F/S"
-                    />
-                  </MenuItem>
-                  <MenuItem className={classes.menuItem}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked value="checkedB" color="primary" />
-                      }
-                      label="Indisponible"
-                    />
-                  </MenuItem>
-                </Paper>
+              <Fade {...TransitionProps} timeout={100}>
+                <ClickAwayListener
+                  onClickAway={this.handleCloseFilter("status")}
+                >
+                  <Paper square elevation={4}>
+                    <div className={classes.filterPopup}>
+                      <Typography variant="body2" noWrap>
+                        Estado
+                      </Typography>
+                      <IconButton
+                        className={classes.button}
+                        aria-label="Filter"
+                        onClick={this.handleCloseFilter("status")}
+                      >
+                        <FilterListIcon />
+                      </IconButton>
+                    </div>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="E/S"
+                      />
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="F/S"
+                      />
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="Indisponible"
+                      />
+                    </MenuItem>
+                  </Paper>
+                </ClickAwayListener>
+              </Fade>
+            )}
+          </Popper>
+          <Popper
+            id={idOpState}
+            open={opStateFilter}
+            anchorEl={opStateEl}
+            transition
+            placement="bottom-start"
+            style={{ zIndex: 9999, marginLeft: -111, marginTop: -58 }}
+          >
+            {({ TransitionProps }) => (
+              <Fade {...TransitionProps} timeout={100}>
+                <ClickAwayListener
+                  onClickAway={this.handleCloseFilter("opState")}
+                >
+                  <Paper square elevation={4}>
+                    <div className={classes.filterPopup}>
+                      <Typography
+                        variant="body2"
+                        style={{ width: 100, textAlign: "center" }}
+                      >
+                        Estado Operacional
+                      </Typography>
+                      <IconButton
+                        className={classes.button}
+                        aria-label="Filter"
+                        onClick={this.handleCloseFilter("opState")}
+                      >
+                        <FilterListIcon />
+                      </IconButton>
+                    </div>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="N"
+                      />
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="DN"
+                      />
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="LP"
+                      />
+                    </MenuItem>
+                  </Paper>
+                </ClickAwayListener>
+              </Fade>
+            )}
+          </Popper>
+          <Popper
+            id={idSlogan}
+            open={sloganFilter}
+            anchorEl={sloganEl}
+            transition
+            placement="bottom-start"
+            style={{ zIndex: 9999, marginLeft: -69, marginTop: -58 }}
+          >
+            {({ TransitionProps }) => (
+              <Fade {...TransitionProps} timeout={100}>
+                <ClickAwayListener
+                  onClickAway={this.handleCloseFilter("slogan")}
+                >
+                  <Paper square elevation={4}>
+                    <div className={classes.filterPopup}>
+                      <Typography variant="body2">Consigna</Typography>
+                      <IconButton
+                        className={classes.button}
+                        aria-label="Filter"
+                        onClick={this.handleCloseFilter("slogan")}
+                      >
+                        <FilterListIcon />
+                      </IconButton>
+                    </div>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="MT"
+                      />
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="FS"
+                      />
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="LP"
+                      />
+                    </MenuItem>
+                  </Paper>
+                </ClickAwayListener>
+              </Fade>
+            )}
+          </Popper>
+          <Popper
+            id={idInstruction}
+            open={instructionFilter}
+            anchorEl={instructionEl}
+            transition
+            placement="bottom-start"
+            style={{ zIndex: 9999, marginLeft: -111, marginTop: -58 }}
+          >
+            {({ TransitionProps }) => (
+              <Fade {...TransitionProps} timeout={100}>
+                <ClickAwayListener
+                  onClickAway={this.handleCloseFilter("instruction")}
+                >
+                  <Paper square elevation={4}>
+                    <div className={classes.filterPopup}>
+                      <Typography
+                        variant="body2"
+                        style={{ width: 100, textAlign: "center" }}
+                      >
+                        Instrucción Operacional
+                      </Typography>
+                      <IconButton
+                        className={classes.button}
+                        aria-label="Filter"
+                        onClick={this.handleCloseFilter("instruction")}
+                      >
+                        <FilterListIcon />
+                      </IconButton>
+                    </div>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="MT"
+                      />
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="FS"
+                      />
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked value="checkedB" color="primary" />
+                        }
+                        label="LP"
+                      />
+                    </MenuItem>
+                  </Paper>
+                </ClickAwayListener>
               </Fade>
             )}
           </Popper>

@@ -14,6 +14,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
 import Menu from "@material-ui/core/Menu";
+import Badge from "@material-ui/core/Badge";
 import Collapse from "@material-ui/core/Collapse";
 import green from "@material-ui/core/colors/green";
 import grey from "@material-ui/core/colors/grey";
@@ -26,6 +27,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/Save";
 import DescriptionIcon from "@material-ui/icons/Comment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import SwipeableViews from "react-swipeable-views";
 import Popper from "@material-ui/core/Popper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -76,7 +78,8 @@ const styles = theme => ({
   number: {
     width: 100,
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    alignItems: "center"
   },
   options: {
     width: 150,
@@ -159,6 +162,14 @@ const styles = theme => ({
   },
   instructionButton: {
     margin: 10
+  },
+  iconGreen: {
+    color: green[500],
+    fontSize: 35
+  },
+  badge: {
+    top: 6,
+    right: -15
   }
 });
 
@@ -331,9 +342,23 @@ class LogItem extends React.Component {
             </Typography>
           </div>
           <div className={classes.number}>
-            <Typography variant="body2" noWrap>
+            <Typography variant="body2" noWrap style={{ flex: 1 }}>
               {cv}
             </Typography>
+            <div
+              style={{
+                marginRight: 20,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <ArrowDropUpIcon className={classes.iconGreen} />
+              <Typography variant="body1" noWrap>
+                4
+              </Typography>
+            </div>
           </div>
           <div className={classes.number}>
             {edit ? (

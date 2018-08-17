@@ -329,7 +329,7 @@ class LogSubHeader extends React.Component {
                         control={
                           <Checkbox checked value="checkedB" color="primary" />
                         }
-                        label="N"
+                        label="N - Normal"
                       />
                     </MenuItem>
                     <MenuItem className={classes.menuItem}>

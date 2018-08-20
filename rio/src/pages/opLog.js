@@ -12,14 +12,9 @@ import AddZone from "../components/opLog/addZone";
 import ToCB from "../components/opLog/toCB";
 
 const styles = theme => ({
-  root: {
-    padding: theme.spacing.unit
-  },
-  header: {
-    margin: theme.spacing.unit
-  },
+  root: {},
+  header: {},
   log: {
-    margin: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 15
   }
 });
@@ -46,7 +41,11 @@ class OpLog extends React.Component {
   };
 
   handleToCBClick = () => {
-    window.scrollTo(0, this.something.offsetTop - window.outerHeight / 2);
+    this.something.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "center"
+    });
   };
 
   handleFilterUpdate = ({ onService, outOfService }) => {
@@ -63,7 +62,7 @@ class OpLog extends React.Component {
 
   render() {
     const { openAddZone } = this.state;
-    const { classes, log, match } = this.props;
+    const { classes, log, match, open } = this.props;
     const { params = {} } = match;
     const { options = null } = params;
 
@@ -84,7 +83,7 @@ class OpLog extends React.Component {
     });
     return (
       <div className={classes.root}>
-        <div className={classes.header}>
+        <div>
           {!options && (
             <div>
               {/* <Filter
@@ -93,7 +92,7 @@ class OpLog extends React.Component {
                 outOfService={this.state.outOfService}
                 unavailable={this.state.unavailable}
               /> */}
-              <Zone handleClick={this.handleAddZone} />
+              <Zone handleClick={this.handleAddZone} openHeader={open} />
               <ToCB handleToCBClick={this.handleToCBClick} />
               <AddZone
                 open={openAddZone}

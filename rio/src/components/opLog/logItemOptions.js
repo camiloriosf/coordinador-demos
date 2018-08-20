@@ -5,20 +5,6 @@ import { withStyles } from "@material-ui/core/styles";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import green from "@material-ui/core/colors/green";
 import grey from "@material-ui/core/colors/grey";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import SwipeableViews from "react-swipeable-views";
-
-function TabContainer({ children, dir }) {
-  return (
-    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
-      {children}
-    </Typography>
-  );
-}
 
 const styles = theme => ({
   root: {
@@ -148,7 +134,6 @@ class LogItemOptions extends React.Component {
   };
   render() {
     const { classes, ins, type, limitation, edit, handleClick } = this.props;
-    const { anchorEl } = this.state;
     return (
       <div className={classes.root}>
         <ButtonBase
@@ -165,22 +150,6 @@ class LogItemOptions extends React.Component {
         >
           {ins}
         </ButtonBase>
-        {/* <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={this.handleClose}
-        >
-          <SwipeableViews
-            axis="x"
-            index={this.state.value}
-            onChangeIndex={this.handleChangeIndex}
-          >
-            <TabContainer>Item One</TabContainer>
-            <TabContainer>Item Two</TabContainer>
-            <TabContainer>Item Three</TabContainer>
-          </SwipeableViews>
-        </Menu> */}
       </div>
     );
   }

@@ -13,8 +13,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
-import Menu from "@material-ui/core/Menu";
-import Badge from "@material-ui/core/Badge";
 import Collapse from "@material-ui/core/Collapse";
 import green from "@material-ui/core/colors/green";
 import grey from "@material-ui/core/colors/grey";
@@ -274,7 +272,6 @@ class LogItem extends React.Component {
       numPad,
       comments,
       expandConfig,
-      anchorEl,
       open
     } = this.state;
 
@@ -529,22 +526,22 @@ class LogItem extends React.Component {
                   noWrap
                   className={classes.configTitle}
                 >
-                  <a className={classes.link} href="#" target="_blank">
+                  <a className={classes.link} href="/" target="_blank">
                     0102
                   </a>
-                  <a className={classes.link} href="#" target="_blank">
+                  <a className={classes.link} href="/" target="_blank">
                     0234
                   </a>
-                  <a className={classes.link} href="#" target="_blank">
+                  <a className={classes.link} href="/" target="_blank">
                     1445
                   </a>
-                  <a className={classes.link} href="#" target="_blank">
+                  <a className={classes.link} href="/" target="_blank">
                     0102
                   </a>
-                  <a className={classes.link} href="#" target="_blank">
+                  <a className={classes.link} href="/" target="_blank">
                     0234
                   </a>
-                  <a className={classes.link} href="#" target="_blank">
+                  <a className={classes.link} href="/" target="_blank">
                     1445
                   </a>
                 </Typography>

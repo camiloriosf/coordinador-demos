@@ -6,13 +6,29 @@ import Header from "../components/common/header";
 
 function withHeader(Component, { drawer = false } = {}) {
   class WithHeader extends React.Component {
+    state = {
+      open: false
+    };
+    handleDrawerOpen = () => {
+      this.setState({ open: true });
+    };
+
+    handleDrawerClose = () => {
+      this.setState({ open: false });
+    };
     render() {
       const { ...passThroughProps } = this.props;
       return (
         <div>
-          <Header />
-          <div style={{ marginTop: 120 }} />
-          <Component {...passThroughProps} />
+          <Header
+            open={this.state.open}
+            handleDrawerOpen={this.handleDrawerOpen}
+            handleDrawerClose={this.handleDrawerClose}
+          >
+            <Component {...passThroughProps} open={this.state.open} />
+          </Header>
+          {/* <div style={{ marginTop: 120 }} />
+          <Component {...passThroughProps} /> */}
         </div>
       );
     }

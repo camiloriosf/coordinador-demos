@@ -1,14 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import AddIcon from "@material-ui/icons/Add";
-import PhoneIcon from "@material-ui/icons/Phone";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import PersonPinIcon from "@material-ui/icons/PersonPin";
 import TabUnselected from "@material-ui/icons/TabUnselected";
 import grey from "@material-ui/core/colors/grey";
 
@@ -17,10 +15,13 @@ const styles = theme => ({
     position: "fixed",
     display: "flex",
     bottom: 0,
-    left: 0,
+    left: 100,
     zIndex: 900,
     margin: theme.spacing.unit * 3,
     alignItems: "center"
+  },
+  openHeader: {
+    left: 280
   },
   paper: {
     margin: theme.spacing.unit
@@ -46,10 +47,12 @@ class Zone extends React.Component {
   };
 
   render() {
-    const { classes, handleClick } = this.props;
+    const { classes, handleClick, openHeader } = this.props;
 
     return (
-      <div className={classes.root}>
+      <div
+        className={classNames(classes.root, openHeader && classes.openHeader)}
+      >
         <Button
           variant="contained"
           color="primary"
@@ -95,7 +98,8 @@ class Zone extends React.Component {
 
 Zone.propTypes = {
   classes: PropTypes.object.isRequired,
-  handleClick: PropTypes.func.isRequired
+  handleClick: PropTypes.func.isRequired,
+  openHeader: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(Zone);

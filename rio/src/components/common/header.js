@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -19,6 +20,8 @@ import ListIcon from "@material-ui/icons/List";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import logo from "../../static/logoCoordinador.svg";
 import LogSubHeader from "./logSubHeader";
+
+const MyLink = props => <Link to={props.to} {...props} />;
 
 const drawerWidth = 240;
 
@@ -163,19 +166,19 @@ class Header extends React.Component {
           </div>
           <Divider />
           <div>
-            <ListItem button>
+            <ListItem button component={MyLink} to="/resumen">
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
               <ListItemText primary="Resúmen" />
             </ListItem>
-            <ListItem button>
+            <ListItem button component={MyLink} to="/">
               <ListItemIcon>
                 <ListIcon />
               </ListItemIcon>
               <ListItemText primary="Registro" />
             </ListItem>
-            <ListItem button>
+            <ListItem button component={MyLink} to="/analisis">
               <ListItemIcon>
                 <TimelineIcon />
               </ListItemIcon>

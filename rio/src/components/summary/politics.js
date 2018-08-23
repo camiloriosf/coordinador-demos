@@ -24,7 +24,7 @@ const styles = theme => ({
     width: "100%",
     marginTop: theme.spacing.unit,
     overflowX: "auto",
-    height: 300
+    maxHeight: 500
   },
   table: {}
 });

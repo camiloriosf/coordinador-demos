@@ -74,8 +74,7 @@ const styles = theme => ({
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
-    ...theme.mixins.toolbar,
-    marginBottom: 60
+    ...theme.mixins.toolbar
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -96,10 +95,12 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
-    position: "relative",
-    maxHeight: "calc(100vh - 130px)",
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
     overflowY: "auto",
-    marginTop: 130
+    maxHeight: "100vh"
   },
   menuButton: {
     marginLeft: 12,
@@ -108,8 +109,12 @@ const styles = theme => ({
   hide: {
     display: "none"
   },
-  logDrawerClose: {
-    marginLeft: theme.spacing.unit * 12
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px",
+    ...theme.mixins.toolbar
   }
 });
 
@@ -143,11 +148,6 @@ class Header extends React.Component {
             </Typography>
             <Button color="secondary">Cerrar Sesión</Button>
           </Toolbar>
-          <div
-            className={classNames(classes.log, !open && classes.logDrawerClose)}
-          >
-            <LogSubHeader />
-          </div>
         </AppBar>
         <Drawer
           variant="permanent"
@@ -186,7 +186,10 @@ class Header extends React.Component {
             </ListItem>
           </div>
         </Drawer>
-        <main className={classes.content}>{this.props.children}</main>
+        <main className={classes.content}>
+          <div className={classes.drawerHeader} />
+          {this.props.children}
+        </main>
       </div>
     );
   }

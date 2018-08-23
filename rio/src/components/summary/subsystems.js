@@ -16,7 +16,7 @@ const styles = theme => ({
     width: "100%",
     marginTop: theme.spacing.unit,
     overflowX: "auto",
-    height: 300
+    maxHeight: 400
   },
   table: {},
   yellowIcon: {

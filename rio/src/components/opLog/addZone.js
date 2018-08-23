@@ -11,19 +11,36 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import { GojsDiagram } from "react-gojs";
 
 const styles = theme => ({
   appBar: {
     position: "relative"
   },
+  content: {
+    display: "flex",
+    width: "100vw",
+    height: "100vh"
+  },
   flex: {
     flex: 1
   },
-  myDiagram: {
+  diagram: {
     width: "100%",
-    flex: "1 1 auto",
-    margin: "auto"
+    flex: 1
+  },
+  search: {
+    flex: 0.5
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 260
   }
 });
 
@@ -61,7 +78,11 @@ class AddZone extends React.Component {
         { from: "Barra 2", to: "Linea 5" },
         { from: "Linea 5", to: "Barra 5" }
       ]
-    }
+    },
+    zone: ""
+  };
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
   };
   createDiagram = diagramId => {
     const $ = go.GraphObject.make;
@@ -102,7 +123,6 @@ class AddZone extends React.Component {
           toolTip: toolTipTemplate,
           locationSpot: go.Spot.Center,
           locationObjectName: "BAR",
-          //   locationObjectName: "ICON",
           selectable: false
         },
         $(go.Shape, "Circle", {
@@ -204,12 +224,36 @@ class AddZone extends React.Component {
             </Typography>
           </Toolbar>
         </AppBar>
-        <GojsDiagram
-          diagramId="myDiagramDiv"
-          model={this.state.model}
-          createDiagram={this.createDiagram}
-          className={classes.myDiagram}
-        />
+        <div className={classes.content}>
+          <GojsDiagram
+            diagramId="diagram"
+            model={this.state.model}
+            createDiagram={this.createDiagram}
+            className={classes.diagram}
+          />
+          <div className={classes.search}>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="zone-simple">
+                Seleccionar Zona Predefinida
+              </InputLabel>
+              <Select
+                value={this.state.zone}
+                onChange={this.handleChange}
+                inputProps={{
+                  name: "zone",
+                  id: "zone-simple"
+                }}
+              >
+                <MenuItem value="">
+                  <em>Ninguna</em>
+                </MenuItem>
+                <MenuItem value={10}>Zona 1</MenuItem>
+                <MenuItem value={20}>Zona 2</MenuItem>
+                <MenuItem value={30}>Zona 3</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+        </div>
       </Dialog>
     );
   }

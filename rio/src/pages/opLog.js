@@ -1,21 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
-// import axios from "axios";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import withRoot from "../HoC/withRoot";
 import withHeader from "../HoC/withHeader";
 import LogItem from "../components/opLog/logItem";
-// import Filter from "../components/opLog/filters";
 import Zone from "../components/opLog/zone";
 import AddZone from "../components/opLog/addZone";
 import ToCB from "../components/opLog/toCB";
+import Header from "../components/common/logSubHeader";
 
 const styles = theme => ({
-  root: {},
+  root: {
+    overflowY: "hidden"
+  },
   header: {},
   log: {
-    marginBottom: theme.spacing.unit * 15
+    maxHeight: "calc(100vh - 260px)",
+    overflowY: "auto"
   }
 });
 
@@ -25,19 +27,6 @@ class OpLog extends React.Component {
     outOfService: false,
     unavailable: false,
     openAddZone: false
-  };
-  componentDidMount = async () => {
-    // try {
-    //   const res = await axios.post(
-    //     "http://localhost:4000",
-    //     {},
-    //     {
-    //       withCredentials: "include"
-    //       // headers: { "Access-Control-Allow-Origin": "*" }
-    //     }
-    //   );
-    //   console.log(res);
-    // } catch (err) {}
   };
 
   handleToCBClick = () => {
@@ -86,12 +75,6 @@ class OpLog extends React.Component {
         <div>
           {!options && (
             <div>
-              {/* <Filter
-                handleFilterUpdate={this.handleFilterUpdate}
-                onService={this.state.onService}
-                outOfService={this.state.outOfService}
-                unavailable={this.state.unavailable}
-              /> */}
               <Zone handleClick={this.handleAddZone} openHeader={open} />
               <ToCB handleToCBClick={this.handleToCBClick} />
               <AddZone
@@ -101,6 +84,7 @@ class OpLog extends React.Component {
             </div>
           )}
         </div>
+        <Header />
         <div className={classes.log}>
           {filtered.map((item, index) => (
             <div

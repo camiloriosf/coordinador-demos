@@ -17,9 +17,9 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ListIcon from "@material-ui/icons/List";
+import AssignmentIcon from "@material-ui/icons/Assignment";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import logo from "../../static/logoCoordinador.svg";
-import LogSubHeader from "./logSubHeader";
 
 const MyLink = props => <Link to={props.to} {...props} />;
 
@@ -115,13 +115,32 @@ const styles = theme => ({
     justifyContent: "flex-end",
     padding: "0 8px",
     ...theme.mixins.toolbar
+  },
+  selected: {
+    backgroundColor: theme.palette.primary.main
+  },
+  selectedIcon: {
+    color: theme.palette.primary.contrastText
+  },
+  selectedText: {
+    color: theme.palette.primary.contrastText
   }
 });
 
 class Header extends React.Component {
+  static getDerivedStateFromProps = (nextProps, nextState) => {
+    const { children = {} } = nextProps;
+    const { props = {} } = children;
+    const { match = {} } = props;
+    const { path = "" } = match;
+    return { path };
+  };
+  state = {
+    path: ""
+  };
   render() {
     const { classes, open, handleDrawerOpen, handleDrawerClose } = this.props;
-
+    const { path } = this.state;
     return (
       <div className={classes.root}>
         <AppBar
@@ -166,23 +185,82 @@ class Header extends React.Component {
           </div>
           <Divider />
           <div>
-            <ListItem button component={MyLink} to="/resumen">
+            <ListItem
+              button
+              component={MyLink}
+              to="/resumen"
+              className={classNames(path === "/resumen" && classes.selected)}
+            >
               <ListItemIcon>
-                <DashboardIcon />
+                <DashboardIcon
+                  className={classNames(
+                    path === "/resumen" && classes.selectedIcon
+                  )}
+                />
               </ListItemIcon>
-              <ListItemText primary="Resúmen" />
+              <ListItemText
+                primary="Resúmen"
+                primaryTypographyProps={{ color: "inherit" }}
+                className={classNames(
+                  path === "/resumen" && classes.selectedText
+                )}
+              />
             </ListItem>
-            <ListItem button component={MyLink} to="/">
+            <ListItem
+              button
+              component={MyLink}
+              to="/"
+              className={classNames(path === "/" && classes.selected)}
+            >
               <ListItemIcon>
-                <ListIcon />
+                <ListIcon
+                  className={classNames(path === "/" && classes.selectedIcon)}
+                />
               </ListItemIcon>
-              <ListItemText primary="Registro" />
+              <ListItemText
+                primary="Registro"
+                className={classNames(path === "/" && classes.selectedText)}
+              />
             </ListItem>
-            <ListItem button component={MyLink} to="/analisis">
+            <ListItem
+              button
+              component={MyLink}
+              to="/politica"
+              className={classNames(path === "/politica" && classes.selected)}
+            >
               <ListItemIcon>
-                <TimelineIcon />
+                <AssignmentIcon
+                  className={classNames(
+                    path === "/politica" && classes.selectedIcon
+                  )}
+                />
               </ListItemIcon>
-              <ListItemText primary="Análisis" />
+              <ListItemText
+                primary="Política"
+                className={classNames(
+                  path === "/politica" && classes.selectedText
+                )}
+              />
+            </ListItem>
+            <ListItem
+              button
+              component={MyLink}
+              to="/analisis"
+              className={classNames(path === "/analisis" && classes.selected)}
+            >
+              <ListItemIcon>
+                <TimelineIcon
+                  className={classNames(
+                    path === "/analisis" && classes.selectedIcon
+                  )}
+                />
+              </ListItemIcon>
+              <ListItemText
+                primary="Análisis"
+                className={classNames(
+                  path === "/analisis" && classes.selectedText
+                )}
+              />
             </ListItem>
           </div>
         </Drawer>

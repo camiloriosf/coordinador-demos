@@ -8,7 +8,7 @@ import LogItem from "../components/opLog/logItem";
 import Zone from "../components/opLog/zone";
 import AddZone from "../components/opLog/addZone";
 import ToCB from "../components/opLog/toCB";
-import Header from "../components/common/logSubHeader";
+import Header from "../components/opLog/logSubHeader";
 
 const styles = theme => ({
   root: {

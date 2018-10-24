@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import withRoot from "../HoC/withRoot";
 import withHeader from "../HoC/withHeader";
+import Compare from "../components/politics/compare";
 
 const styles = theme => ({
   root: {
@@ -15,7 +16,11 @@ class Politics extends React.Component {
   render() {
     const { classes } = this.props;
 
-    return <div className={classes.root}>Politica</div>;
+    return (
+      <div className={classes.root}>
+        <Compare />
+      </div>
+    );
   }
 }
 

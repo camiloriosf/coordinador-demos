@@ -18,12 +18,12 @@ const styles = theme => ({
 
 class GridItem extends React.Component {
   render() {
-    const { classes } = this.props;
+    const { classes, children } = this.props;
 
     return (
       <div className={classes.root}>
         <Paper className={classes.paper} elevation={1}>
-          {this.props.children}
+          {children}
         </Paper>
       </div>
     );
